@@ -35,3 +35,21 @@ You can also use the http requests from any frontend. You just need to point (an
 If you want the development server to be seen on the network, you could use this command instead :
 `python manage.py runserver 0.0.0.0:8888`
 This should do the job and you should be able to access the API from your network IP adress (in place of localhost or 0.0.0.0)
+
+## Testing
+
+If you want to test it using tests I wrote, go to `./python_solution/` folder and run the following command :
+`python manage.py test`
+
+This will use `./python_solution/productionplan/tests.py` file to run tests defined (as functions) inside the test class called `ProductionplanTest`
+
+## Information about previous version
+
+At first I thought I had to set `Powerplant Pmax` in the response instead of delivered `MWh as P` that is why I probably misunderstood and failed on first try.
+In fact the `Max delivered MWh par Powerplant` I calculated was correct, I just misunderstood the value requested in the response.
+
+Example: `Wind turbine` with a `pmax = 150` and `60%` wind ==> `Max MWh delivered = 90`
+
+I thought I had to say `will work at full potential (=> 150) to deliver the maximum 90 MWh possible`, which I guess was a wrong understanding of the exercise.
+
+It has now been fixed. As my understanding evolved.
