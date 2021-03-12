@@ -75,7 +75,7 @@ class ProductionPlan(APIView):
         output_data, load_left = self._calculate_output_data(mwh_price_ordered_pp, fuels_dict, load_val)
         
         if load_left > 0:
-            output_data.insert(0, {'warning': "Not enough power for the required load. Everything should be at full power."})
+            # output_data.insert(0, {'warning': "Not enough power for the required load. Everything should be at full power."})
             output_data.append({'name': 'remaining_load', 'p' : load_left})
 
             return Response(output_data, status=status.HTTP_406_NOT_ACCEPTABLE)

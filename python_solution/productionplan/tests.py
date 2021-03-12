@@ -37,10 +37,10 @@ class ProductionplanTest(APITestCase):
 
             response_total = 0
 
-            if isinstance(response.data, list):
-                for elem in response.data:
-                    response_total += elem['p']
-                
-                self.assertEqual(response_total, load)
-            else:
+            for elem in response.data:
+                response_total += elem['p']
+            
+            self.assertEqual(response_total, load)
+        
+            if response.data[-1]['name'] == 'remaining_load':
                 self.assertEqual(response.status_code, status.HTTP_406_NOT_ACCEPTABLE)
