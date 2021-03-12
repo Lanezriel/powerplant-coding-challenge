@@ -46,10 +46,12 @@ This will use `./python_solution/productionplan/tests.py` file to run tests defi
 ## Information about previous version
 
 At first I thought I had to set `Powerplant Pmax` in the response instead of delivered `MWh as P` that is why I probably misunderstood and failed on first try.
-In fact the `Max delivered MWh par Powerplant` I calculated was correct, I just misunderstood the value requested in the response.
+In fact the `Max delivered MWh per Powerplant` I calculated was correct (if my new understanding is correct), I just misunderstood the value requested in the response.
 
 Example: `Wind turbine` with a `pmax = 150` and `60%` wind ==> `Max MWh delivered = 90`
 
 I thought I had to say `will work at full potential (=> 150) to deliver the maximum 90 MWh possible`, which I guess was a wrong understanding of the exercise.
 
-It has now been fixed. As my understanding evolved.
+It has now been fixed as my understanding evolved.
+
+The details of the exercise were not clear for me whether we needed to repond with Powerplant's used power to create the MWh required or directly the created MWh.
