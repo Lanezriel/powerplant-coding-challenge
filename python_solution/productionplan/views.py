@@ -25,7 +25,7 @@ class ProductionPlan(APIView):
             fuels_dict = request.data["fuels"]        
             powerplants = request.data["powerplants"]
         except KeyError as key_e:
-            return Response(f"Data do not have any {key_e} key inside the JSON Object.", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(f"Data do not have any {key_e} key inside the JSON Object.", status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response(f"Unknown error : {e}", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -44,9 +44,9 @@ class ProductionPlan(APIView):
             if energy_type == "wind":
                 price = 0
             elif energy_type == "gas":
-                price = self._look_for_key_startswith(fuels_dict, energy_type) + co2_pricing
+                price = round(self._look_for_key_startswith(fuels_dict, energy_type) / elem["efficiency"], 2) + co2_pricing
             else:
-                price = self._look_for_key_startswith(fuels_dict, energy_type)
+                price = round(self._look_for_key_startswith(fuels_dict, energy_type) / elem["efficiency"], 2)
             
             elem["mwh_price"] = price
         
@@ -61,8 +61,8 @@ class ProductionPlan(APIView):
                 other_calculation_elem = 1
 
             efficiency_multiplier = elem["efficiency"] * other_calculation_elem
-            max_load_difference = elem["pmax"] * efficiency_multiplier
-            min_load_difference = elem["pmin"] * efficiency_multiplier
+            max_load_difference = round(elem["pmax"] * efficiency_multiplier, 1)
+            min_load_difference = round(elem["pmin"] * efficiency_multiplier, 1)
 
             # Uncomment for debug purpose
             # print(f"{elem['name']}'s max MWh calculated : {max_load_difference} <==> load left : {load_left}")
@@ -73,16 +73,14 @@ class ProductionPlan(APIView):
             if efficiency_multiplier == 0:
                 output_data.append({'name': elem["name"], 'p': 0})
             elif load_left >= max_load_difference:
-                output_data.append({'name': elem["name"], 'p': elem["pmax"]})
-                load_left -= max_load_difference
+                # output_data.append({'name': elem["name"], 'p': elem["pmax"]})
+                output_data.append({'name': elem["name"], 'p': max_load_difference})
+                load_left = round(load_left - max_load_difference, 1)
             elif load_left > 0 and load_left >= min_load_difference and load_left <= max_load_difference:
-                # Uncomment the next line if you want the power rounded up (which will then stop to correspond to a multiple of 0.1 MWh)
-                # output_data.append({'name': elem["name"], 'p': math.ceil(load_left / efficiency_multiplier)})
+                # output_data.append({'name': elem["name"], 'p': load_left / efficiency_multiplier})
+                output_data.append({'name': elem["name"], 'p': load_left})
 
-                #Use the next line if you want the power to be the closest to a multiple of 0.1 MWh (this will be a big float)
-                output_data.append({'name': elem["name"], 'p': load_left / efficiency_multiplier})
-
-                load_left -= load_left
+                load_left = round(load_left - load_left, 1)
             else:
                 output_data.append({'name': elem["name"], 'p': 0})
         
