@@ -36,6 +36,14 @@ If you want the development server to be seen on the network, you could use this
 `python manage.py runserver 0.0.0.0:8888`
 This should do the job and you should be able to access the API from your network IP adress (in place of localhost or 0.0.0.0)
 
+### VSCode Debugger
+
+If you don't want to type `python manage.py runserver localhost:8888` everytime, you can use VSCode's debugger.
+
+Be sure to have opened the parent folder (the one containing `.vscode` folder) and you should be able to use the `Run` view to launch the project.
+
+This will use `.vscode/launch.json` for that purpose.
+
 ## Testing
 
 If you want to test it using tests I wrote, go to `./python_solution/` folder and run the following command :
